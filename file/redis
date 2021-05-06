@@ -1,0 +1,31 @@
+Redis为什么快：
+1.操作基本基于内存
+2.数据结构简单
+3.单线程，避免上下文切换和竞争，不存在线程切换的消耗，不存在锁消耗
+4.多路复用型IO
+5.使用自己的RESP通讯协议，自己构建了VM，节约系统调用函数的时间
+
+Redis删除策略：
+1.定时删除
+2.惰性删除
+3.定期删除
+惰性 + 定期
+
+Redis淘汰策略
+1.volatile-lru    利用LRU算法移除设置过过期时间的key (LRU:最近使用 Least Recently Used )
+2.volatile-ttl    移除即将过期的key(minor TTL)
+3.volatile-random 移除设置过过期时间的随机key
+4.allkeys-lru     利用LRU算法移除任何key （和1相比，删除的key包括设置过期时间和不设置过期时间的）。通常使用该方式
+5.allkeys-random  无差别的随机移除
+6.noeviction      不移除任何key，只是返回一个写错误 ，默认选项，一般不会选用
+默认：noeviction
+PS：LRU (Least recently used)   最近最少使用，如果数据最近被访问过，那么将来被访问的几率也更高
+    LFU (Least frequently used) 最不经常使用，如果一个数据在最近一段时间内使用次数很少，那么在将来一段时间内被使用的可能性也很小
+
+RDB：
+当 Redis 需要做持久化时，Redis 会 fork 一个子进程，子进程将数据写到磁盘上一个临时 RDB 文件中。
+当子进程完成写临时文件后，将原来的 RDB 替换掉，这样的好处就是可以 copy-on-write。
+
+AOF：
+采用日志的形式来记录每个写操作，并追加到文件中。Redis 重启的会根据日志文件的内容将写指令从前到后执行一次以完成数据的恢复工作。
+
