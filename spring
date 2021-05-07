@@ -1,3 +1,4 @@
+一、spring中的设计模式
 1.工厂模式
 2.代理模式
 3.单例模式
@@ -5,7 +6,7 @@
 5.策略模式
 6.观察者模式
 
-SpringBootBean的生命周期如下:
+二、SpringBoot中Bean的生命周期:
 1.————————SpringBoot开始运行————————
 2.Bean的静态方法快
 3.Bean的普通方法快
@@ -24,7 +25,7 @@ SpringBootBean的生命周期如下:
 16.{@linkDisposableBean}.destroy()
 17.{@linkBean}.destroyMethod()
 
-Spring三级缓存：
+三、Spring三级缓存：
 1.一级缓存，存放完整的 Bean
 2.二级缓存，存放提前暴露的Bean，Bean 是不完整的，未完成属性注入和执行 init 方法
 3.三级缓存，存放的是 Bean 工厂，主要是生产 Bean，存放到二级缓存中
@@ -50,3 +51,10 @@ Spring事务失效的场景：
 6.NEVER ：以非事务方式运行，如果当前存在事务，则抛出异常。
 7.NESTED ：如果当前存在事务，则创建一个事务作为当前事务的嵌套事务来运行；如果当前没有事务，则该取值等价于 REQUIRED 。
 8.指定方法：通过使用 propagation 属性设置，例如：@Transactional(propagation = Propagation.REQUIRED)
+
+springboot自动配置原理：
+1.@SpringBootApplication注解
+2.@EnableAutoConfiguration注解
+3.@Import(AutoConfigurationImportSelector.class)注解中的类
+4.类中的方法getCandidateConfigurations
+5.META-INF/spring.factories
