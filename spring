@@ -33,7 +33,7 @@ PS：
 如果 Spring 选择二级缓存来解决循环依赖的话，那么就意味着所有 Bean 都需要在实例化完成之后就立马为其创建代理，
 而 Spring 的设计原则是在 Bean 初始化完成之后才为其创建代理。所以，Spring 选择了三级缓存。
 
-Spring事务失效的场景：
+四、Spring事务失效的场景：
 1.注解@Transactional配置的方法非public权限修饰；
 2.注解@Transactional所在类非Spring容器管理的bean；
 3.注解@Transactional所在类中，注解修饰的方法被类内部方法调用；
@@ -42,7 +42,7 @@ Spring事务失效的场景：
 6.注解@Transactional中Propagation属性值设置错误即Propagation.NOT_SUPPORTED（一般不会设置此种传播机制）
 7.mysql关系型数据库，且存储引擎是MyISAM而非InnoDB，则事务会不起作用(基本开发中不会遇到)；
 
-事务的传播机制：
+五、事务的传播机制：
 1.REQUIRED ：如果当前存在事务，则加入该事务；如果当前没有事务，则创建一个新的事务。
 2.SUPPORTS ：如果当前存在事务，则加入该事务；如果当前没有事务，则以非事务的方式继续运行。
 3.MANDATORY ：如果当前存在事务，则加入该事务；如果当前没有事务，则抛出异常。
@@ -52,7 +52,7 @@ Spring事务失效的场景：
 7.NESTED ：如果当前存在事务，则创建一个事务作为当前事务的嵌套事务来运行；如果当前没有事务，则该取值等价于 REQUIRED 。
 8.指定方法：通过使用 propagation 属性设置，例如：@Transactional(propagation = Propagation.REQUIRED)
 
-springboot自动配置原理：
+六、springboot自动配置原理：
 1.@SpringBootApplication注解
 2.@EnableAutoConfiguration注解
 3.@Import(AutoConfigurationImportSelector.class)注解中的类

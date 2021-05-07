@@ -1,4 +1,10 @@
-MySQL优化：
+一、MyISAM与InnoDB的区别：
+1.InnoDB支持事务，MyISAM不支持
+2.InnoDB支持外键，而MyISAM不支持
+3.MyISAM中索引和数据分离的(索引存B+树)，InnoDB中索引和数据都在B+树中
+4.InnoDB支持表、行(默认)级锁，而MyISAM支持表级锁
+
+二、MySQL优化：
 1.查询优化：
   a. 避免 SELECT *，需要什么数据，就查询对应的字段
   b.小表驱动大表，即小的数据集驱动大的数据集
@@ -15,29 +21,27 @@ MySQL优化：
   e.索引列不要为空，且不要使用 is null 或 is not null 判断
   f.索引字段是字符串类型，查询条件的值要加''单引号,避免底层类型自动转换
 
-MySQL索引失效原因：
+三、MySQL索引失效原因：
 1.where条件出来的数据量大于总数据量的15%
 2.对索引列进行了运算(+ - * / !)、函数操作或隐式类型转换
 3.使用 <> 、not in 、not exist、!=
 4.使用like "%_"
 5.联合索引未匹配到第一个索引列
 
-Join的执行顺序：
-1.执行FROM子句对两张表进行笛卡尔积操作，生成虚拟表vt1
-2.执行ON子句过滤掉vt1中不满足条件的行，生成虚拟表vt2
-3.JOIN 添加外部行，LEFT JOIN会将左表未出现在vt2的行插入进vt2，每一行的剩余字段将被填充为NULL，RIGHT JOIN同理
-4.WHERE条件过滤
-5.SELECT
+四、Join的执行顺序：
+1.执行 FROM 子句对两张表进行笛卡尔积操作，生成虚拟表 vt1
+2.执行 ON 子句过滤掉 vt1 中不满足条件的行，生成虚拟表 vt2
+3.JOIN 添加外部行，LEFT JOIN 会将左表未出现在 vt2 的行插入进 vt2，每一行的剩余字段将被填充为 NULL，RIGHT JOIN同理
+4.WHERE 条件过滤
+5.SELECT 选择需要的列
 
-MySQL语句执行过程：
+五、MySQL语句执行过程：
 1.查询语句
-  权限校验 -> 查询缓存 -> 分析器 —> 优化器 —> 执行器 —> 引擎
-2.更新语句
-  权限校验 -> 分析器 -> 优化器 -> 执行器 -> 引擎 -> redo log prepare -> binlog -> redo log commit
-                                                 -> 缓存池 -> undo log
+  连接器 -> 查询缓存 -> 分析器 —> 优化器 —> 执行器 —> 引擎
+2.更新语句(insert、update、delete)
+  连接器 -> 查询缓存(删除该表所有缓存) -> 分析器 -> 优化器 -> 执行器 -> 引擎
+     (引擎中流程：undo log -> redo log prepare -> binlog -> redo log commit)
 
-MyISAM与InnoDB的区别：
-1.InnoDB支持事务，MyISAM不支持
-2.InnoDB支持外键，而MyISAM不支持
-3.MyISAM中索引和数据分离的(索引存B+树)，InnoDB中索引和数据都在B+树中
-4.InnoDB支持表、行(默认)级锁，而MyISAM支持表级锁
+六、SQL关键字执行顺序
+1.from           2.on                     3.join        4.where
+5.group by       6.having + 聚合函数       7.select      8.order by       9.limit
