@@ -45,3 +45,11 @@
 六、SQL关键字执行顺序
 1.from           2.on                     3.join        4.where
 5.group by       6.having + 聚合函数       7.select      8.order by       9.limit
+
+七、Bin log、Redo、Undo log
+1.Bin log: 对数据操作进行备份，记录操作语句对具体行的操作以及操作前的整行信息或 sql 语句;
+2.Redo log: 记录暂不更新到磁盘的操作，延迟落盘，提高效率，记录数据页修改逻辑以及 change buffer 的变更;
+3.Undo log: 用于事务回滚、保证事务隔离级别(read committed、repeatable read)，记录行记录变化前的数据;
+4.区别：
+  a.redo 与 undo 是存储引擎层的日志，只能用于 innodb；bin log 是 Sever 层日志，可以用于任何引擎;
+  b.redo log 大小有限，超过阈值后会循环写；undo 与 bin log 不会;
