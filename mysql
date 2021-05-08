@@ -1,7 +1,7 @@
 一、MyISAM与InnoDB的区别：
 1.InnoDB支持事务，MyISAM不支持
 2.InnoDB支持外键，而MyISAM不支持
-3.MyISAM中索引和数据分离的(索引存B+树)，InnoDB中索引和数据都在B+树中
+3.MyISAM中索引和数据是分离的(索引存B+树)，InnoDB中索引和数据都在B+树中
 4.InnoDB支持表、行(默认)级锁，而MyISAM支持表级锁
 
 二、MySQL优化：
@@ -40,16 +40,42 @@
   连接器 -> 查询缓存 -> 分析器 —> 优化器 —> 执行器 —> 引擎
 2.更新语句(insert、update、delete)
   连接器 -> 查询缓存(删除该表所有缓存) -> 分析器 -> 优化器 -> 执行器 -> 引擎
-     (引擎中流程：undo log -> redo log prepare -> binlog -> redo log commit)
+  (引擎中流程：undo log -> redo log prepare -> binlog -> redo log commit)
 
-六、SQL关键字执行顺序
-1.from           2.on                     3.join        4.where
-5.group by       6.having + 聚合函数       7.select      8.order by       9.limit
+六、SQL关键字执行顺序(共9个):
+from -> on -> join -> where -> group by -> having + 聚合函数 -> select -> order by -> limit
 
-七、Bin log、Redo、Undo log
+七、Bin log、Redo、Undo log:
 1.Bin log: 对数据操作进行备份，记录操作语句对具体行的操作以及操作前的整行信息或 sql 语句;
+   a.基于语句的复制(STATEMENT): 将修改数据的 sql 语句记录到 bin log 中(数据量小，使用函数时会出现主从不一致问题，如sleep()函数， last_insert_id())
+   b.基于行数据的复制(ROW): 将数据变化的信息写入 bin log 中(数据量大，但是不会出现主从不一致问题)
+   c.混合复制(MIXED): 以上两种的结合体，默认使用语句复制，出问题时切换为行复制
 2.Redo log: 记录暂不更新到磁盘的操作，延迟落盘，提高效率，记录数据页修改逻辑以及 change buffer 的变更;
 3.Undo log: 用于事务回滚、保证事务隔离级别(read committed、repeatable read)，记录行记录变化前的数据;
-4.区别：
+4.区别:
   a.redo 与 undo 是存储引擎层的日志，只能用于 innodb；bin log 是 Sever 层日志，可以用于任何引擎;
   b.redo log 大小有限，超过阈值后会循环写；undo 与 bin log 不会;
+
+八、MySQL主从同步:
+1.master 将数据变化记录到 bin log 中;
+2.slave 的 I/O thread 将 master 的 bin log events 保存到自己的 relay log 中;
+3.slave 的 sql thread 检查 relay log，并更新数据;
+PS: 此过程是异步的
+
+九、MVCC:
+1.定义: Multi-Version Concurrency Control，多版本并发控制。
+       指的是使用 READ COMMITTED 和 REPEATABLE READ 两种隔离级别的事务在执行普通的 SELECT 操作时访问记录的版本链的过程。
+       (版本链: Undo log 中对某行记录的修改形成的链表)
+2.核心: 生成 ReadView 的时机不同。
+    a.READ COMMITTED —— 每次读取数据前都生成一个 ReadView;
+    b.REPEATABLE READ —— 在第一次读取数据时生成一个 ReadView;
+3.ReadView:
+    a.m_ids: 生成 ReadView 时当前系统中活跃的读写事务的事务id列表;
+    b.min_trx_id: 生成 ReadView 时当前系统中活跃的读写事务中最小的事务id，也就是 m_ids 中的最小值;
+    c.max_trx_id: 生成 ReadView 时系统中应该分配给下一个事务的id值;
+    d.creator_trx_id: 生成该 ReadView 的事务的事务id;
+4.判断步骤:
+    a.被访问版本 trx_id == ReadView 中 creator_trx_id，可以访问
+    b.被访问版本 trx_id < ReadView 中 min_trx_id，不可以访问
+    c.被访问版本 trx_id > ReadView 中 max_trx_id，不可以访问
+    d.min_trx_id < trx_id < max_trx_id 并且 trx_id 在 m_ids 中，不可以访问
