@@ -98,3 +98,25 @@ PS: MySQL 不允许脏写发生，通过排它锁的方式解决脏写。只有�
     b.被访问版本 trx_id < ReadView 中 min_trx_id，不可以访问;
     c.被访问版本 trx_id > ReadView 中 max_trx_id，不可以访问;
     d.min_trx_id < trx_id < max_trx_id 并且 trx_id 在 m_ids 中，不可以访问;
+
+十三、锁:
+1.共享锁，Shared Locks，简称 S 锁: 其他事务可以读，但是不能写;
+2.独占锁，排他锁，Exclusive Locks，简称 X 锁: 其他事务不能读也不能写;
+
+十四、死锁产生场景:
+商品 goods 表有商品G1，G2，G3，… n种商品。 用户 A 的购物车添加的商品有 G1，G2。用户 B 添加到购物车的商品有 G2，G1，G4。
+当用户结算的时候，需要将 goods 表中对应的商品库存减 1。此时，用户 A 与用户 B 同时结算。
+  a.用户 A: select * from goods where good_id = G1 for update，对商品 G2 加锁，处于等待状态...;
+　b.用户 B: select * from goods where good_id = G2 for update，对商品 G1 进行加锁，等待...产生死锁;
+
+十五、MySQL与MongoDB对比:
+                      MySQL                        MongoDB
+1.数据库模型:    关系型                       非关系型
+2.存储方式:     不同引擎有不同的存储方式        以类JSON的文档的格式存储
+3.查询语句:     SQL语句                      MongoDB查询方式（类似JavaScript的函数）
+4.数据处理方式:  不同引擎有自己的特点           基于内存，将热数据存放在物理内存中，从而达到高速读写
+5.成熟度:       成熟度高                     新兴数据库，成熟度较低
+6.广泛度:       开源数据库，市场份额不断增长    NoSQL数据库中，比较完善且开源，使用人数在不断增长
+7.事务性:       支持事务操作                  仅支持单文档事务操作，弱一致性
+8.占用空间:     占用空间小                    占用空间大
+9.join操作:     支持 join                    不支持 join
