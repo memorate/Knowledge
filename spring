@@ -60,22 +60,20 @@ PS:
 5.META-INF/spring.factories
 
 七、springboot配置文件加载顺序:
-1.启动类中 SpringApplication.setDefaultProperties 设置的配置内容;
-命令行参数:
-  SpringApplication类默认会把以“--”开头的命令行参数转化成应用中可以使用的配置参数，如“--name = Alex”会设置配置参数“name”的值为“Alex”。
-2.通过 System.getProperties() 获取的 Java 系统参数;
-3.操作系统环境变量;
-4.从 java:comp/env 得到的 JNDI 属性;
-5.通过 RandomValuePropertySource 生成的“random.*”属性;
-6.启动时通过命令 spring.config.location 指定的配置文件，例:
-  java -jar demo.jar --spring.config.location=/XXX/XXX.properties
-7.Jar 内部的配置文件:
-  a.
-  b.
-  c.
-  d.
-8.
-9.
+1.命令行参数:
+  SpringBoot默认会把以“--”开头的命令行参数转化成应用中可以使用的配置参数，如“--name = Alex”会设置配置参数“name”的值为“Alex”
+2.启动时通过命令 spring.config.location 指定的配置文件，例:
+    java -jar demo.jar --spring.config.location=/XXX/XXX.properties
+3.Jar内部的 application.properties 或 yml;
+4.Jar内部的 application-{profile}.properties 或 yml;
+5.Jar外部的 application.properties 或 yml;
+6.Jar外部的 application-{profile}.properties 或 yml;
 PS: a.相同优先级位置的 properties 和 yml 文件，优先加载 properties。
     b.高优先级的配置覆盖低优先级的配置，所有的配置会形成互补配置。
-    c.官方文档: https://docs.spring.io/spring-boot/docs/2.4.5/reference/html/spring-boot-features.html#boot-features-external-config
+    c.寻找 application.properties 或 yml 的顺序:
+      1）classpath root
+      2）classpath /config
+      3）当前目录
+      4）当前目录的 /config
+      5）当前目录的 /config 的子目录
+    d.官方文档: https://docs.spring.io/spring-boot/docs/2.4.5/reference/html/spring-boot-features.html#boot-features-external-config
