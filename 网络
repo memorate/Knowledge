@@ -1,30 +1,28 @@
-BIO、NIO、AIO
-1.BIO：Blocking I/O，同步阻塞I/O模式，数据的读取写入必须阻塞在一个线程内等待其完成。
-2.NIO：New I/O，Non-Blocking I/O，同步非阻塞的I/O模型
-3.AIO：Asynchronous I/O，异步非阻塞的IO模型
+一、BIO、NIO、AIO
+1.BIO: Blocking I/O，同步阻塞I/O模式，数据的读取写入必须阻塞在一个线程内等待其完成。
+2.NIO: New I/O，Non-Blocking I/O，同步非阻塞的I/O模型
+3.AIO: Asynchronous I/O，异步非阻塞的IO模型
 
-BIO与NIO的区别：
+二、BIO与NIO的区别: 
 1.BIO以字节流的形式读写，NIO以块的方式处理数据，效率更高
 2.BIO流是阻塞的，NIO流是非阻塞的
 3.BIO流是单向读写，NIO中channel是双向读写
 4.NIO中缓冲区(本质是个数组)可以进行分片，可以建立只读缓冲区、直接缓冲区和间接缓冲区
 
-NIO三大组件：
-1.Channel  2.Buffer  3.Selector
+三、NIO三大组件: 
+1.Channel    2.Buffer    3.Selector
 
-Buffer属性：
+四、Buffer属性: 
 1.capacity，缓冲区数组的总长度
 2.position，下一个要操作的数据元素的位置
 3.limit，缓冲区数组中不可操作的下一个元素的位置，limit<=capacity
 4.mark，用于记录当前 position 的前一个位置或者默认是 0
 
-Buffer类型：
-1.ByteBuffer     2.CharBuffer
-3.ShortBuffer    4.IntBuffer
-5.LongBuffe      6.FloatBuffer
-7.DoubleBuffer
+五、Buffer类型: 
+1.ByteBuffer     2.CharBuffer       3.ShortBuffer       4.IntBuffer
+5.LongBuffer     6.FloatBuffer      7.DoubleBuffer
 
-Selector介绍：
+六、Selector介绍: 
 1.用一个线程，处理多个的客户端连接，就会用到选择器
 2.Selector能够检测多个注册的通道上是否有事件发生。如果有事件发生，便获取事件然后针对每个事件进行相应的处理。
   这样就可以只用一个单线程去管理多个通道，也就是管理多个连接和请求
@@ -32,5 +30,15 @@ Selector介绍：
   不用去维护多个线程
 4.避免了多线程之间的上下文切换导致的开销
 
-IO多路复用：
+七、IO多路复用: 
 
+八、网络分层:
+1.OSI(Open System Interconnection，开放系统互连)分层: 物理层、数据链路层、网络层、传输层、会话层、表示层、应用层;
+2.TCP/IP 分层: 链接层或Mac层(物理层、数据链路层)、网络层、传输层、应用层(会话层、表示层、应用层);
+3.五层模型: 物理层、数据链路层、网络层、传输层、应用层(会话层、表示层、应用层)，五层模型是 OSI 和 TCP/IP 的综合;
+
+九、TCP与UDP:
+
+十、TCP的三次握手和四次挥手:
+
+十一、Http与Https:

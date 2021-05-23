@@ -34,22 +34,22 @@ PS:
   而 Spring 的设计原则是在 Bean 初始化完成之后才为其创建代理。所以，Spring 选择了三级缓存。
 
 四、Spring事务失效的场景：
-1.注解@Transactional配置的方法非public权限修饰；
-2.注解@Transactional所在类非Spring容器管理的bean；
-3.注解@Transactional所在类中，注解修饰的方法被类内部方法调用；
-4.业务代码抛出异常类型非RuntimeException，事务失效；
+1.注解@Transactional配置的方法非public权限修饰;
+2.注解@Transactional所在类非Spring容器管理的bean;
+3.注解@Transactional所在类中，注解修饰的方法被类内部方法调用;
+4.业务代码抛出异常类型非RuntimeException，事务失效;
 5.业务代码中存在异常时，使用try…catch…语句块捕获，而catch语句块没有throw new RuntimeException异常;（最难被排查到问题且容易忽略）
 6.注解@Transactional中Propagation属性值设置错误即Propagation.NOT_SUPPORTED（一般不会设置此种传播机制）
 7.mysql关系型数据库，且存储引擎是MyISAM而非InnoDB，则事务会不起作用(基本开发中不会遇到);
 
 五、事务的传播机制：
-1.REQUIRED: 如果当前存在事务，则加入该事务；如果当前没有事务，则创建一个新的事务。
-2.SUPPORTS: 如果当前存在事务，则加入该事务；如果当前没有事务，则以非事务的方式继续运行。
-3.MANDATORY: 如果当前存在事务，则加入该事务；如果当前没有事务，则抛出异常。
+1.REQUIRED: 如果当前存在事务，则加入该事务;如果当前没有事务，则创建一个新的事务。
+2.SUPPORTS: 如果当前存在事务，则加入该事务;如果当前没有事务，则以非事务的方式继续运行。
+3.MANDATORY: 如果当前存在事务，则加入该事务;如果当前没有事务，则抛出异常。
 4.REQUIRES_NEW: 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
 5.NOT_SUPPORTED: 以非事务方式运行，如果当前存在事务，则把当前事务挂起。
 6.NEVER: 以非事务方式运行，如果当前存在事务，则抛出异常。
-7.NESTED: 如果当前存在事务，则创建一个事务作为当前事务的嵌套事务来运行；如果当前没有事务，则该取值等价于 REQUIRED 。
+7.NESTED: 如果当前存在事务，则创建一个事务作为当前事务的嵌套事务来运行;如果当前没有事务，则该取值等价于 REQUIRED。
 8.指定方法：通过使用 propagation 属性设置，例如：@Transactional(propagation = Propagation.REQUIRED)
 
 六、springboot自动配置原理:
@@ -58,3 +58,24 @@ PS:
 3.@Import(AutoConfigurationImportSelector.class)注解中的类
 4.类中的方法getCandidateConfigurations
 5.META-INF/spring.factories
+
+七、springboot配置文件加载顺序:
+1.启动类中 SpringApplication.setDefaultProperties 设置的配置内容;
+命令行参数:
+  SpringApplication类默认会把以“--”开头的命令行参数转化成应用中可以使用的配置参数，如“--name = Alex”会设置配置参数“name”的值为“Alex”。
+2.通过 System.getProperties() 获取的 Java 系统参数;
+3.操作系统环境变量;
+4.从 java:comp/env 得到的 JNDI 属性;
+5.通过 RandomValuePropertySource 生成的“random.*”属性;
+6.启动时通过命令 spring.config.location 指定的配置文件，例:
+  java -jar demo.jar --spring.config.location=/XXX/XXX.properties
+7.Jar 内部的配置文件:
+  a.
+  b.
+  c.
+  d.
+8.
+9.
+PS: a.相同优先级位置的 properties 和 yml 文件，优先加载 properties。
+    b.高优先级的配置覆盖低优先级的配置，所有的配置会形成互补配置。
+    c.官方文档: https://docs.spring.io/spring-boot/docs/2.4.5/reference/html/spring-boot-features.html#boot-features-external-config
