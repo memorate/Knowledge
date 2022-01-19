@@ -125,3 +125,7 @@ PS: MySQL 不允许脏写发生，通过排它锁的方式解决脏写。只有�
 当用户结算的时候，需要将 goods 表中对应的商品库存减 1。此时，用户 A 与用户 B 同时结算。
   a.用户 A: select * from goods where good_id = G1 for update，对商品 G2 加锁，处于等待状态...;
 　b.用户 B: select * from goods where good_id = G2 for update，对商品 G1 进行加锁，等待...产生死锁;
+
+十七、Drop、Truncate、Delete 的区别
+
+十八、DDL、DML、DCL

@@ -1,0 +1,12 @@
+一、golang 数据类型
+1.基本类型
+ 1）整型
+   A.int/int8/int16/int322/int64
+   B.uint/uint8/uint16/uint3/uint64
+   C.byte/rune
+ 2）浮点数
+ 3）复数类型
+ 4）字符串
+2.复合类型（聚合类型）
+3.引用类型
+4.接口类型
