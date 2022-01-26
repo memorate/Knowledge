@@ -131,3 +131,6 @@ PS: MySQL 不允许脏写发生，通过排它锁的方式解决脏写。只有�
 十八、DDL、DML、DCL
 
 十九、系统变量、状态变量、global、session
+
+二十、MySQL 的 utf8
+在 MySQ L中 utf8 是 utf8mb3 的别名，所以之后在 MySQL 中提到 utf8 就意味着使用 1 ~ 3 个字节来表示一个字符，如果大家有使用 4 字节编码一个字符的情况，比如存储一些 emoji 表情啥的，那请使用 utf8mb4。
